@@ -1,11 +1,12 @@
-def hashPolinomial(input, M):
-    numerals = str(input).split()
+CSV_PLAYERS_SIZE = 22787
+def hashPolinomial(id, size):
+    numerals = str(id).split()
     length = len(numerals)
     a = 31
     polinomio = 0
     for j in range(0, length):
         polinomio = polinomio + int(numerals[j]) * a ** j
-    key = polinomio % M
+    key = polinomio % size
     return key
 
 
@@ -43,6 +44,8 @@ class Player:
         self.id = id
         self.name = name
 
+# Testes
+
 myTable = HashTable(10)
 
 messi = Player(12345, 'Messi')
@@ -50,7 +53,6 @@ geromel = Player(97854, 'Geromel')
 myTable.insert(messi)
 myTable.insert(geromel)
 
-print(vars(myTable.search(97854)))
 
 
 
