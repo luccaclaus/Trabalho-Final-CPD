@@ -1,9 +1,10 @@
 def hashPolinomial(input, M):
-    length = len(input)
+    numerals = str(input).split()
+    length = len(numerals)
     a = 31
     polinomio = 0
     for j in range(0, length):
-        polinomio = polinomio + ord(input[j]) * a ** j
+        polinomio = polinomio + int(numerals[j]) * a ** j
     key = polinomio % M
     return key
 
@@ -17,36 +18,39 @@ class HashTable:
             self.table.append([])
 
     def insert(self, data):
-        key = self.hashFunction(data, self.size)
-        print(key)
+        key = self.hashFunction(data.id, self.size)
         self.table[key].append(data)
 
-    def search(self, data):
-        key = self.hashFunction(data, self.size)
+    def search(self, id):
+        key = self.hashFunction(id, self.size)
         cell = self.table[key]
         if not cell:
             return False
         else:
             for item in cell:
-                if item == data:
+                if item.id == id:
                     return item
 
     def print(self):
         for cell in self.table:
-            print(cell)
+            for item in cell:
+                print(vars(item))
+        print('\n\n')
 
 
-class player:
-    def __int__(self):
-        self.id
+class Player:
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
 
 myTable = HashTable(10)
 
-myTable.insert('Rafael')
-myTable.insert('Leafar')
-myTable.insert('Ana')
-myTable.insert('Lucca')
-print(myTable.size)
+messi = Player(12345, 'Messi')
+geromel = Player(97854, 'Geromel')
+myTable.insert(messi)
+myTable.insert(geromel)
 
-myTable.print()
-print(myTable.search('Leafar'))
+print(vars(myTable.search(97854)))
+
+
+
