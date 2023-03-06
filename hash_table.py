@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
+import csv
 
 CSV_PLAYERS_SIZE = 22787
+
 def hashPolinomial(id, size):
     numerals = str(id).split()
     length = len(numerals)
@@ -45,6 +47,7 @@ class Player:
     def __init__(self, id, name):
         self.id = id
         self.name = name
+        #self.position = position
 
 # Testes
 
@@ -56,5 +59,19 @@ myTable.insert(messi)
 myTable.insert(geromel)
 
 
-players_df = pd.read_csv('http://www.inf.ufrgs.br/~comba/inf1047-files/fifa/players.csv')
-print(players_df)
+#players_df = pd.read_csv('http://www.inf.ufrgs.br/~comba/inf1047-files/fifa/players.csv')
+#print(players_df)
+#print(type(players_df))
+
+f = open('INF01124_FIFA21_clean/players.csv')
+csv_f = csv.reader(f)
+
+#for row in csv_f:
+#    print(row)
+
+teste1 = HashTable(CSV_PLAYERS_SIZE)
+
+for row in csv_f:
+    value = int(row[0])
+    p_position  = teste1.hashFunction(value ,CSV_PLAYERS_SIZE)
+    teste1.table[p_position].append(Player(int(row[0]), row[1]))
