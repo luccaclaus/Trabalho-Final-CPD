@@ -1,3 +1,6 @@
+import pandas as pd
+import numpy as np
+
 CSV_PLAYERS_SIZE = 22787
 def hashPolinomial(id, size):
     numerals = str(id).split()
@@ -8,7 +11,6 @@ def hashPolinomial(id, size):
         polinomio = polinomio + int(numerals[j]) * a ** j
     key = polinomio % size
     return key
-
 
 class HashTable:
     def __init__(self, size):
@@ -54,5 +56,5 @@ myTable.insert(messi)
 myTable.insert(geromel)
 
 
-
-
+players_df = pd.read_csv('http://www.inf.ufrgs.br/~comba/inf1047-files/fifa/players.csv')
+print(players_df)
