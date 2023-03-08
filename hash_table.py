@@ -3,7 +3,7 @@ import numpy as np
 import csv
 
 CSV_PLAYERS_SIZE = 22787
-CSV_RATINGS_SIZE = 24188091
+CSV_RATINGS_SIZE = 24188069
 
 def hashPolinomial(id, size):
     numerals = str(id).split()
@@ -17,9 +17,9 @@ def hashPolinomial(id, size):
 
 
 class HashTable:
-    def __init__(self, size):
+    def __init__(self, size, hash_funct):
         self.size = size
-        self.hashFunction = hashPolinomial
+        self.hashFunction = hash_funct
         self.table = []
         for i in range(0, size):
             self.table.append([])
@@ -83,7 +83,6 @@ def read_ratings_csv(file, hash_table):
             player_id = line[1]
             rating = line[2]
             hash_table.insert(Rating(id, player_id, rating))
-            count = count+1
 
 
 # Testes
@@ -93,10 +92,10 @@ players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
 ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 
 # Criacao dos Hashs
-players_hash = HashTable(CSV_PLAYERS_SIZE)
+players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
 read_players_csv(players_f, players_hash)
 
-ratings_hash = HashTable(CSV_RATINGS_SIZE)
+ratings_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
 read_ratings_csv(ratings_f, ratings_hash)
 
 #ratings_hash.print()
