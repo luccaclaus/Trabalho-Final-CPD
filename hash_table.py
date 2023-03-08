@@ -1,8 +1,9 @@
-# import pandas as pd
+import pandas as pd
 import numpy as np
 import csv
 
 CSV_PLAYERS_SIZE = 22787
+
 
 def hashPolinomial(id, size):
     numerals = str(id).split()
@@ -13,6 +14,7 @@ def hashPolinomial(id, size):
         polinomio = polinomio + int(numerals[j]) * a ** j
     key = polinomio % size
     return key
+
 
 class HashTable:
     def __init__(self, size):
@@ -38,33 +40,38 @@ class HashTable:
 
     def print(self):
         for cell in self.table:
+            print('-------')
             for item in cell:
                 print(vars(item))
         print('\n\n')
 
 
 class Player:
-    def __init__(self, id, name):
+    def __init__(self, id, name, positions):
         self.id = id
         self.name = name
-        #self.position = position
+        self.positions = positions
+
+
+def read_players_csv(file, hash_table):
+    with file as csv_file:
+        csv_reader = csv.reader(csv_file)
+        next(csv_reader)
+        for line in csv_reader:
+            id = line[0]
+            name = line[1]
+            positions = []
+
+            for position in line[2].split(','):
+                positions.append(position)
+            hash_table.insert(Player(id, name, positions))
+
 
 # Testes
 
-#players_df = pd.read_csv('http://www.inf.ufrgs.br/~comba/inf1047-files/fifa/players.csv')
-#print(players_df)
-#print(type(players_df))
+players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
+players_hash = HashTable(CSV_PLAYERS_SIZE)
 
-f = open('INF01124_FIFA21_clean/players.csv')
-csv_f = csv.reader(f)
+read_players_csv(players_f, players_hash)
 
-#for row in csv_f:
-#    print(row)
-
-teste1 = HashTable(CSV_PLAYERS_SIZE)
-
-for row in csv_f:
-    value = int(row[0])
-    # p_position  = teste1.hashFunction(value ,CSV_PLAYERS_SIZE)
-    # teste1.table[p_position].append(Player(int(row[0]), row[1]))
-    teste1.insert(Player(int(row[0]), row[1]))
+players_hash.print()
