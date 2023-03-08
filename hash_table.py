@@ -99,4 +99,4 @@ ratings_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
 read_ratings_csv(ratings_f, ratings_hash)
 
 #ratings_hash.print()
-# players_hash.print()
+players_hash.print()
