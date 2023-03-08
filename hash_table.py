@@ -53,6 +53,13 @@ class Player:
         self.positions = positions
 
 
+class Rating:
+    def __init__(self, id, player_id, rating):
+        self.id = id
+        self.player_id = player_id
+        self.rating = rating
+
+
 def read_players_csv(file, hash_table):
     with file as csv_file:
         csv_reader = csv.reader(csv_file)
@@ -60,18 +67,36 @@ def read_players_csv(file, hash_table):
         for line in csv_reader:
             id = line[0]
             name = line[1]
-            positions = []
+            positions = line[2].split(',')
 
-            for position in line[2].split(','):
-                positions.append(position)
+            # for position in line[2].split(','):
+            #     positions.append(position)
             hash_table.insert(Player(id, name, positions))
+
+
+def read_ratings_csv(file, hash_table):
+    with file as csv_file:
+        csv_reader = csv.reader(csv_file)
+        next(csv_reader)
+        for line in csv_reader:
+            id = line[0]
+            player_id = line[1]
+            rating = line[2]
+            hash_table.insert(Rating(id, player_id, rating))
 
 
 # Testes
 
+# arquivos
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
-players_hash = HashTable(CSV_PLAYERS_SIZE)
+ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 
+# Criacao dos Hashs
+players_hash = HashTable(CSV_PLAYERS_SIZE)
 read_players_csv(players_f, players_hash)
 
-players_hash.print()
+ratings_hash = HashTable(1000)
+read_ratings_csv(ratings_f, ratings_hash)
+
+#ratings_hash.print()
+# players_hash.print()
