@@ -5,6 +5,7 @@ import csv
 CSV_PLAYERS_SIZE = 22787
 CSV_RATINGS_SIZE = 24188069
 
+
 def hashPolinomial(id, size):
     numerals = str(id).split()
     length = len(numerals)
@@ -16,6 +17,35 @@ def hashPolinomial(id, size):
     return key
 
 
+class TrieNode:
+    def __init__(self):
+        self.children = [None] * 27 # a = 0 , b = 1 , ... z = 25, ' ' = 26
+        self.endOfWord = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def getCharIndex(self,char):
+        if char == ' ':
+            return 26
+        else:
+            return ord(char) - 97
+
+    def makeNewNode(self):
+        return TrieNode()
+
+    def insert(self, string):
+        current_node = self.root
+        string_len = len(string)
+        for level in range(0, string_len):
+            char = string[level]
+            print(char)
+            index = self.getCharIndex(char)
+            if not current_node.children[index]:
+                current_node.children[index] = self.makeNewNode()
+            current_node = current_node.children[index]
+        current_node.endOfWord = True
 class HashTable:
     def __init__(self, size, hash_funct):
         self.size = size
@@ -91,12 +121,21 @@ def read_ratings_csv(file, hash_table):
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
 ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 
+myTrie = Trie()
+myTrie.insert('abgh')
+myTrie.insert(' abgh')
+
+print(myTrie.root.children)
+
 # Criacao dos Hashs
-players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
-read_players_csv(players_f, players_hash)
+# players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
+# read_players_csv(players_f, players_hash)
+#
+# ratings_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
+# read_ratings_csv(ratings_f, ratings_hash)
 
-ratings_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
-read_ratings_csv(ratings_f, ratings_hash)
+# ratings_hash.print()
+# players_hash.print()
 
-#ratings_hash.print()
-players_hash.print()
+
+
