@@ -19,14 +19,15 @@ def hashPolinomial(id, size):
 
 class TrieNode:
     def __init__(self):
-        self.children = [None] * 27 # a = 0 , b = 1 , ... z = 25, ' ' = 26
+        self.children = [None] * 27  # a = 0 , b = 1 , ... z = 25, ' ' = 26
         self.endOfWord = False
+
 
 class Trie:
     def __init__(self):
         self.root = TrieNode()
 
-    def getCharIndex(self,char):
+    def getCharIndex(self, char):
         if char == ' ':
             return 26
         else:
@@ -38,12 +39,23 @@ class Trie:
     def insert(self, string):
         current_node = self.root
         for char in string:
-            print(char)
             index = self.getCharIndex(char)
             if not current_node.children[index]:
                 current_node.children[index] = self.makeNewNode()
             current_node = current_node.children[index]
         current_node.endOfWord = True
+
+    def search(self, string):
+        current_node = self.root
+        for char in string:
+            index = self.getCharIndex(char)
+            if not current_node.children[index]:
+                return False
+            else:
+                current_node = current_node.children[index]
+
+        return current_node.endOfWord
+
 class HashTable:
     def __init__(self, size, hash_funct):
         self.size = size
@@ -120,9 +132,11 @@ players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
 ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 
 myTrie = Trie()
-myTrie.insert('a bgh')
+myTrie.insert('abc')
 myTrie.insert('a hd')
-print(myTrie.root.children[0].children[26].children)
+print(myTrie.search('hjk'))
+print(myTrie.search('abc'))
+print(myTrie.search('a hd'))
 
 # Criacao dos Hashs
 # players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
@@ -133,6 +147,3 @@ print(myTrie.root.children[0].children[26].children)
 
 # ratings_hash.print()
 # players_hash.print()
-
-
-
