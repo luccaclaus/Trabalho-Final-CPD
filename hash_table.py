@@ -19,8 +19,8 @@ def hashPolinomial(id, size):
 
 class TrieNode:
     def __init__(self):
-        self.children = [None] * 27  # a = 0 , b = 1 , ... z = 25, ' ' = 26
-        self.endOfWord = False
+        self.children = [None] * 27  # a = 0 , b = 1 , ... z = 25, outros = 26
+        self.player_id = 0
 
 
 class Trie:
@@ -28,7 +28,8 @@ class Trie:
         self.root = TrieNode()
 
     def getCharIndex(self, char):
-        if char == ' ':
+        char = char.lower()
+        if char == ' ' or char == '-' or char == "'" or char == '.' or char == '"':
             return 26
         else:
             return ord(char) - 97
@@ -36,14 +37,14 @@ class Trie:
     def makeNewNode(self):
         return TrieNode()
 
-    def insert(self, string):
+    def insert(self, string, id):
         current_node = self.root
         for char in string:
             index = self.getCharIndex(char)
             if not current_node.children[index]:
                 current_node.children[index] = self.makeNewNode()
             current_node = current_node.children[index]
-        current_node.endOfWord = True
+        current_node.player_id = id
 
     def search(self, string):
         current_node = self.root
@@ -54,7 +55,7 @@ class Trie:
             else:
                 current_node = current_node.children[index]
 
-        return current_node.endOfWord
+        return current_node.player_id
 
 class HashTable:
     def __init__(self, size, hash_funct):
@@ -100,7 +101,7 @@ class Rating:
         self.rating = rating
 
 
-def read_players_csv(file, hash_table):
+def read_players_csv(file, hash_table, trie):
     with file as csv_file:
         csv_reader = csv.reader(csv_file)
         next(csv_reader)
@@ -109,9 +110,8 @@ def read_players_csv(file, hash_table):
             name = line[1]
             positions = line[2].split(',')
 
-            # for position in line[2].split(','):
-            #     positions.append(position)
             hash_table.insert(Player(id, name, positions))
+            trie.insert(name, id)
 
 
 def read_ratings_csv(file, hash_table):
@@ -131,19 +131,14 @@ def read_ratings_csv(file, hash_table):
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
 ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 
-myTrie = Trie()
-myTrie.insert('abc')
-myTrie.insert('a hd')
-print(myTrie.search('hjk'))
-print(myTrie.search('abc'))
-print(myTrie.search('a hd'))
+# Criacao das estruturas
+players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
+players_name_trie = Trie()
 
-# Criacao dos Hashs
-# players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
-# read_players_csv(players_f, players_hash)
-#
-# ratings_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
-# read_ratings_csv(ratings_f, ratings_hash)
-
-# ratings_hash.print()
-# players_hash.print()
+# players_name_trie.insert('Mesi', 10)
+# players_name_trie.search('Mesi')
+#leitura dos arquivos
+read_players_csv(players_f, players_hash, players_name_trie)
+print(players_name_trie.search('Cheikhou Dieng'))
+print(players_name_trie.search('David Alejandro Salazar Zepeda'))
+print(players_name_trie.search('Ginazu'))
