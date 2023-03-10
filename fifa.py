@@ -46,7 +46,7 @@ class Trie:
             current_node = current_node.children[index]
         current_node.player_id = id
 
-    def search(self, string):
+    def searchNode(self, string):
         current_node = self.root
         for char in string:
             index = self.getCharIndex(char)
@@ -55,7 +55,25 @@ class Trie:
             else:
                 current_node = current_node.children[index]
 
-        return current_node.player_id
+        return current_node
+
+    def findAllAncestors(self, node):
+        if node is not None:
+            current_node = node
+            player_ids = []
+            children_ids = []
+            if current_node.player_id:
+                player_ids.append(current_node.player_id)
+            for child in current_node.children:
+                if child is not None:
+                    children_ids = children_ids + self.findAllAncestors(child)
+            player_ids = player_ids + children_ids
+            return player_ids
+
+    def findAllPlayers(self, string):
+        start_node = self.searchNode(string)
+        return self.findAllAncestors(start_node)
+
 
 class HashTable:
     def __init__(self, size, hash_funct):
@@ -135,10 +153,10 @@ ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
 players_name_trie = Trie()
 
-# players_name_trie.insert('Mesi', 10)
-# players_name_trie.search('Mesi')
+
 #leitura dos arquivos
 read_players_csv(players_f, players_hash, players_name_trie)
-print(players_name_trie.search('Cheikhou Dieng'))
-print(players_name_trie.search('David Alejandro Salazar Zepeda'))
-print(players_name_trie.search('Ginazu'))
+search_result = players_name_trie.findAllPlayers('Daniel')
+print(search_result)
+
+
