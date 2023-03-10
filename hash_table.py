@@ -37,9 +37,7 @@ class Trie:
 
     def insert(self, string):
         current_node = self.root
-        string_len = len(string)
-        for level in range(0, string_len):
-            char = string[level]
+        for char in string:
             print(char)
             index = self.getCharIndex(char)
             if not current_node.children[index]:
@@ -122,10 +120,9 @@ players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
 ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 
 myTrie = Trie()
-myTrie.insert('abgh')
-myTrie.insert(' abgh')
-
-print(myTrie.root.children)
+myTrie.insert('a bgh')
+myTrie.insert('a hd')
+print(myTrie.root.children[0].children[26].children)
 
 # Criacao dos Hashs
 # players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
