@@ -110,6 +110,8 @@ class Player:
         self.id = id
         self.name = name
         self.positions = positions
+        self.total_score = 0
+        self.ratings_count = 0
 
 
 class Rating:
@@ -132,15 +134,18 @@ def read_players_csv(file, hash_table, trie):
             trie.insert(name, id)
 
 
-def read_ratings_csv(file, hash_table):
+def read_ratings_csv(file, hash_players):
     with file as csv_file:
         csv_reader = csv.reader(csv_file)
         next(csv_reader)
         for line in csv_reader:
             id = line[0]
             player_id = line[1]
-            rating = line[2]
-            hash_table.insert(Rating(id, player_id, rating))
+            rating = float(line[2])
+
+            target_player = hash_players.search(player_id)
+            target_player.ratings_count = target_player.ratings_count + 1
+            target_player.total_score = target_player.total_score + rating
 
 
 # Testes
@@ -156,7 +161,10 @@ players_name_trie = Trie()
 
 #leitura dos arquivos
 read_players_csv(players_f, players_hash, players_name_trie)
-search_result = players_name_trie.findAllPlayers('Daniel')
-print(search_result)
+read_ratings_csv(ratings_f, players_hash)
+search_result = players_name_trie.findAllPlayers('Art')
+for id in search_result:
+    player = players_hash.search(id)
+    print(player.id, player.name, player.positions, player.total_score/player.ratings_count)
 
 
