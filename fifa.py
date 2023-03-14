@@ -1,10 +1,12 @@
 import pandas as pd
 import numpy as np
 import csv
+import time 
 
 CSV_PLAYERS_SIZE = 22787
 CSV_RATINGS_SIZE = 24188069
 
+start_time = time.time()
 
 def hashPolinomial(id, size):
     numerals = str(id).split()
@@ -162,9 +164,13 @@ players_name_trie = Trie()
 #leitura dos arquivos
 read_players_csv(players_f, players_hash, players_name_trie)
 read_ratings_csv(ratings_f, players_hash)
+print("--- %s seconds ---" % (time.time() - start_time))
+
+start_time = time.time()
 search_result = players_name_trie.findAllPlayers('Art')
 for id in search_result:
     player = players_hash.search(id)
     print(player.id, player.name, player.positions, player.total_score/player.ratings_count)
+print("--- %s seconds ---" % (time.time() - start_time))
 
 
