@@ -122,7 +122,7 @@ class Player:
             return 0
 
 
-class Rating:
+class Review:
     def __init__(self,player_id, score):
         self.player_id = player_id
         self.score = score
@@ -152,7 +152,7 @@ def read_ratings_csv(file, hash_players, hash_users):
             user_id = line[0]
             player_id = line[1]
             score = float(line[2])
-            rating = Rating(player_id, score)
+            rating = Review(player_id, score)
 
             target_user = hash_users.search(user_id)
             if target_user:
