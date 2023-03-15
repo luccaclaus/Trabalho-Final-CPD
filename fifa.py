@@ -115,12 +115,17 @@ class Player:
         self.positions = positions
         self.total_score = 0
         self.ratings_count = 0
+    def get_global_rating(self):
+        if self.ratings_count != 0:
+            return self.total_score / self.ratings_count
+        else:
+            return 0
 
 
 class Rating:
-    def __init__(self,player_id, rating):
+    def __init__(self,player_id, score):
         self.player_id = player_id
-        self.rating = rating
+        self.score = score
 
 class User:
     def __init__(self,id, ratings):
@@ -159,17 +164,34 @@ def read_ratings_csv(file, hash_players, hash_users):
             target_player.total_score = target_player.total_score + score
 
 
+#Códigos de questões
+
+def search_by_name(name, names_trie, hash_table):
+
+    search_result = names_trie.findAllPlayers(name)
+    for id in search_result:
+        player = hash_table.search(id)
+
+        print(
+            player.id,
+            player.name,
+            player.positions,
+            player.get_global_rating(),
+            player.ratings_count)
+
+
+
 # Testes
 
 # arquivos
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
-ratings_f = open('INF01124_FIFA21_clean/minirating.csv', 'r')
+ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 
 # Criacao das estruturas
 players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
 players_name_trie = Trie()
 
-users_hash = HashTable(CSV_MINIRATINGS_SIZE, hashPolinomial)
+users_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
 
 # leitura dos arquivos
 read_players_csv(players_f, players_hash, players_name_trie)
@@ -177,21 +199,27 @@ read_ratings_csv(ratings_f, players_hash,users_hash)
 
 
 # questão 2.1
-# print("--- %s seconds ---" % (time.time() - start_time))
-# start_time = time.time()
-# search_result = players_name_trie.findAllPlayers('Art')
-# for id in search_result:
-#     player = players_hash.search(id)
-#
-#     if player.ratings_count != 0:
-#         rating = player.total_score / player.ratings_count
-#     else:
-#         rating = 0
-#
-#     print(player.id, player.name, player.positions, rating, player.ratings_count)
-#
-# print("--- %s seconds ---" % (time.time() - start_time))
+print("QUESTÃO 2.1\n")
+print("--- %s seconds ---" % (time.time() - start_time))
+start_time = time.time()
+
+search_by_name('Mat', players_name_trie,players_hash)
+
+print("--- %s seconds ---" % (time.time() - start_time))
 
 #questao 2.2
 
-my_user = users_hash.search('60040')
+print("\n\nQUESTÃO 2.2\n")
+
+def get_user_ratings(user_id, hash_players):
+    user = users_hash.search('60040')
+
+    for rating in user.ratings:
+        rated_player = hash_players.search(rating.player_id)
+        print(rated_player.id,
+              rated_player.name,
+              rated_player.get_global_rating(),
+              rated_player.ratings_count,
+              rating.score)
+
+get_user_ratings('119743', players_hash)
