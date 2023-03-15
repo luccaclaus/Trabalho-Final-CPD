@@ -1,12 +1,14 @@
 import pandas as pd
 import numpy as np
 import csv
-import time 
+import time
 
 CSV_PLAYERS_SIZE = 22787
 CSV_RATINGS_SIZE = 24188069
+CSV_MINIRATINGS_SIZE = 10007
 
 start_time = time.time()
+
 
 def hashPolinomial(id, size):
     numerals = str(id).split()
@@ -92,12 +94,11 @@ class HashTable:
     def search(self, id):
         key = self.hashFunction(id, self.size)
         cell = self.table[key]
-        if not cell:
-            return False
-        else:
+        if cell:
             for item in cell:
                 if item.id == id:
                     return item
+        return False
 
     def print(self):
         for cell in self.table:
@@ -117,12 +118,14 @@ class Player:
 
 
 class Rating:
-    def __init__(self, id, player_id, rating):
-        self.id = id
+    def __init__(self,player_id, rating):
         self.player_id = player_id
         self.rating = rating
 
-
+class User:
+    def __init__(self,id, ratings):
+        self.id = id
+        self.ratings = ratings
 def read_players_csv(file, hash_table, trie):
     with file as csv_file:
         csv_reader = csv.reader(csv_file)
@@ -136,41 +139,59 @@ def read_players_csv(file, hash_table, trie):
             trie.insert(name, id)
 
 
-def read_ratings_csv(file, hash_players):
+def read_ratings_csv(file, hash_players, hash_users):
     with file as csv_file:
         csv_reader = csv.reader(csv_file)
         next(csv_reader)
         for line in csv_reader:
-            id = line[0]
+            user_id = line[0]
             player_id = line[1]
-            rating = float(line[2])
+            score = float(line[2])
+            rating = Rating(player_id, score)
 
+            target_user = hash_users.search(user_id)
+            if target_user:
+                target_user.ratings.append(rating)
+            else:
+                hash_users.insert(User(user_id, [rating]))
             target_player = hash_players.search(player_id)
             target_player.ratings_count = target_player.ratings_count + 1
-            target_player.total_score = target_player.total_score + rating
+            target_player.total_score = target_player.total_score + score
 
 
 # Testes
 
 # arquivos
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
-ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
+ratings_f = open('INF01124_FIFA21_clean/minirating.csv', 'r')
 
 # Criacao das estruturas
 players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
 players_name_trie = Trie()
 
+users_hash = HashTable(CSV_MINIRATINGS_SIZE, hashPolinomial)
 
-#leitura dos arquivos
+# leitura dos arquivos
 read_players_csv(players_f, players_hash, players_name_trie)
-read_ratings_csv(ratings_f, players_hash)
-print("--- %s seconds ---" % (time.time() - start_time))
-
-start_time = time.time()
-search_result = players_name_trie.findAllPlayers('Art')
-for id in search_result:
-    player = players_hash.search(id)
-    print(player.id, player.name, player.positions, player.total_score/player.ratings_count)
-print("--- %s seconds ---" % (time.time() - start_time))
+read_ratings_csv(ratings_f, players_hash,users_hash)
 
 
+# questão 2.1
+# print("--- %s seconds ---" % (time.time() - start_time))
+# start_time = time.time()
+# search_result = players_name_trie.findAllPlayers('Art')
+# for id in search_result:
+#     player = players_hash.search(id)
+#
+#     if player.ratings_count != 0:
+#         rating = player.total_score / player.ratings_count
+#     else:
+#         rating = 0
+#
+#     print(player.id, player.name, player.positions, rating, player.ratings_count)
+#
+# print("--- %s seconds ---" % (time.time() - start_time))
+
+#questao 2.2
+
+my_user = users_hash.search('60040')
