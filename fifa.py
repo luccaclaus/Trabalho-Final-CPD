@@ -9,7 +9,6 @@ CSV_MINIRATINGS_SIZE = 10007
 
 start_time = time.time()
 
-
 def hashPolinomial(id, size):
     numerals = str(id).split()
     length = len(numerals)
@@ -131,6 +130,7 @@ class User:
     def __init__(self,id, ratings):
         self.id = id
         self.ratings = ratings
+        
 def read_players_csv(file, hash_table, trie):
     with file as csv_file:
         csv_reader = csv.reader(csv_file)
@@ -198,6 +198,7 @@ read_players_csv(players_f, players_hash, players_name_trie)
 read_ratings_csv(ratings_f, players_hash,users_hash)
 
 
+
 # questão 2.1
 print("QUESTÃO 2.1\n")
 print("--- %s seconds ---" % (time.time() - start_time))
@@ -207,8 +208,9 @@ search_by_name('Mat', players_name_trie,players_hash)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
-#questao 2.2
 
+
+#questao 2.2
 print("\n\nQUESTÃO 2.2\n")
 
 def get_user_ratings(user_id, hash_players):
@@ -223,3 +225,28 @@ def get_user_ratings(user_id, hash_players):
               rating.score)
 
 get_user_ratings('119743', players_hash)
+
+
+
+#questâo 2.3
+print("\n\nQUESTÃO 2.3\n")
+
+def best_ratings(N, posicao, hash_players):
+    players_in_position = {}
+    
+    for player in hash_players:
+        for position in player.positions:
+            if position == posicao:
+                players_in_position[player.total_score] = player.id
+    
+    sorted_players_in_position = sorted(players_in_position)
+    
+    for id in zip(range(0,N), sorted_players_in_position):
+        player_used = players_hash.search(sorted_players_in_position(id))
+        print(player_used.id,
+              player_used.name,
+              player_used.positions,
+              player_used.total_score,
+              player_used.ratings_count)
+        
+best_ratings(5, 'ST', players_hash)
