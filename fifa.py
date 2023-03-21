@@ -98,14 +98,14 @@ class HashTable:
                 if item.id == id:
                     return item
         return False
-
-    def print(self):
-        for cell in self.table:
-            print('-------')
-            for item in cell:
-                print(vars(item))
-        print('\n\n')
-
+"""
+    #def print(self):
+        #for cell in self.table:
+            #print('-------')
+            #for item in cell:
+                #print(vars(item))
+        #print('\n\n')
+"""
 
 class Player:
     def __init__(self, id, name, positions):
@@ -114,6 +114,7 @@ class Player:
         self.positions = positions
         self.total_score = 0
         self.ratings_count = 0
+
     def get_global_rating(self):
         if self.ratings_count != 0:
             return self.total_score / self.ratings_count
@@ -163,8 +164,9 @@ def read_ratings_csv(file, hash_players, hash_users):
             target_player.ratings_count = target_player.ratings_count + 1
             target_player.total_score = target_player.total_score + score
 
-
-#Códigos de questões
+"""
+# Códigos de questões
+"""
 
 def search_by_name(name, names_trie, hash_table):
 
@@ -178,28 +180,33 @@ def search_by_name(name, names_trie, hash_table):
             player.positions,
             player.get_global_rating(),
             player.ratings_count)
-
-
-
+"""
 # Testes
-
+"""
+"""
 # arquivos
+"""
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
 ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 
+"""
 # Criacao das estruturas
+"""
+
 players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
 players_name_trie = Trie()
 
 users_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
-
+"""
 # leitura dos arquivos
+"""
 read_players_csv(players_f, players_hash, players_name_trie)
 read_ratings_csv(ratings_f, players_hash,users_hash)
 
 
-
+"""
 # questão 2.1
+"""
 print("QUESTÃO 2.1\n")
 print("--- %s seconds ---" % (time.time() - start_time))
 start_time = time.time()
@@ -209,8 +216,9 @@ search_by_name('Mat', players_name_trie,players_hash)
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
-
+"""
 #questao 2.2
+"""
 print("\n\nQUESTÃO 2.2\n")
 
 def get_user_ratings(user_id, hash_players):
@@ -227,8 +235,9 @@ def get_user_ratings(user_id, hash_players):
 get_user_ratings('119743', players_hash)
 
 
-
+"""
 #questâo 2.3
+"""
 print("\n\nQUESTÃO 2.3\n")
 
 def best_ratings(N, posicao, hash_players):
@@ -237,12 +246,12 @@ def best_ratings(N, posicao, hash_players):
     for player in hash_players:
         for position in player.positions:
             if position == posicao:
-                players_in_position[player.total_score] = player.id
+                players_in_position[player.id] = player.get_global_rating()
     
     sorted_players_in_position = sorted(players_in_position)
     
-    for id in zip(range(0,N), sorted_players_in_position):
-        player_used = players_hash.search(sorted_players_in_position(id))
+    for i in range(0,N):
+        player_used = hash_players.search(sorted_players_in_position(i))
         print(player_used.id,
               player_used.name,
               player_used.positions,
