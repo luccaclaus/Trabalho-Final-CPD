@@ -123,6 +123,7 @@ class Player:
         self.positions = positions
         self.total_score = 0
         self.ratings_count = 0
+        self.tags = []
 
     def get_global_rating(self):
         if self.ratings_count != 0:
@@ -176,6 +177,20 @@ def read_ratings_csv(file, hash_players, hash_users):
             target_player.ratings_count = target_player.ratings_count + 1
             target_player.total_score = target_player.total_score + score
 
+def read_tags_csv(file, hash_players):
+    with file as csv_file:
+        csv_reader = csv.reader(csv_file)
+        next(csv_reader)
+        # Leitura dos dados
+        for line in csv_reader:
+            player_id = line[1]
+            tag = line[2]
+            player = hash_players.search(player_id)
+            if player:
+                player.tags.append(tag)
+
+
+
 """
 # Códigos de questões
 """
@@ -215,6 +230,7 @@ users_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
 """
 read_players_csv(players_f, players_hash, players_name_trie)
 read_ratings_csv(ratings_f, players_hash,users_hash)
+read_tags_csv(tags_f,players_hash)
 
 
 """
@@ -224,7 +240,7 @@ print("QUESTÃO 2.1\n")
 print("--- %s seconds ---" % (time.time() - start_time))
 start_time = time.time()
 
-# search_by_name('Mat', players_name_trie,players_hash)
+search_by_name('Mat', players_name_trie,players_hash)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -245,7 +261,7 @@ def get_user_ratings(user_id, hash_players):
               rated_player.ratings_count,
               rating.score)
 
-# get_user_ratings('119743', players_hash)
+get_user_ratings('119743', players_hash)
 
 
 """
@@ -283,4 +299,5 @@ for id in best_players_id:
 """
 #questâo 2.4
 """
+print(players_hash.search('158023').tags)
 
