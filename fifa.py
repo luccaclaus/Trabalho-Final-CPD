@@ -116,6 +116,13 @@ class HashTable:
 
         return top_players_id
 
+    def get_tags_intersec(self, tags_list):
+        for cell in self.table:
+            if cell:
+                for player in cell:
+                    for tag in tags_list:
+                        if 
+
 class Player:
     def __init__(self, id, name, positions):
         self.id = id
@@ -186,12 +193,10 @@ def read_tags_csv(file, hash_players):
             player_id = line[1]
             tag = line[2]
 
-            print(tag)
             player = hash_players.search(player_id)
             if player:
                 player.tags.append(tag)
 
-    print(tag_lists)
 
 
 
@@ -304,5 +309,5 @@ for id in best_players_id:
 """
 #questâo 2.4
 """
-#print(players_hash.search('158023').tags)
+
 
