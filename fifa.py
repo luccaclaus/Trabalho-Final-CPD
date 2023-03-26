@@ -185,9 +185,14 @@ def read_tags_csv(file, hash_players):
         for line in csv_reader:
             player_id = line[1]
             tag = line[2]
+
+            print(tag)
             player = hash_players.search(player_id)
             if player:
                 player.tags.append(tag)
+
+    print(tag_lists)
+
 
 
 
@@ -214,7 +219,7 @@ def search_by_name(name, names_trie, hash_table):
 # arquivos
 """
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
-ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
+ratings_f = open('INF01124_FIFA21_clean/minirating.csv', 'r')
 tags_f = open('INF01124_FIFA21_clean/tags.csv')
 
 """
