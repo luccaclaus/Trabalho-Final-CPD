@@ -299,5 +299,5 @@ for id in best_players_id:
 """
 #questâo 2.4
 """
-print(players_hash.search('158023').tags)
+#print(players_hash.search('158023').tags)
 
