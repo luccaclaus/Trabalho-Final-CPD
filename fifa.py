@@ -9,6 +9,7 @@ CSV_MINIRATINGS_SIZE = 10007
 
 start_time = time.time()
 
+
 def hashPolinomial(id, size):
     numerals = str(id).split()
     length = len(numerals)
@@ -98,14 +99,22 @@ class HashTable:
                 if item.id == id:
                     return item
         return False
-"""
-    #def print(self):
-        #for cell in self.table:
-            #print('-------')
-            #for item in cell:
-                #print(vars(item))
-        #print('\n\n')
-"""
+
+    def get_best(self, N, position):
+        players_in_position = []
+        for cell in self.table:
+            if cell:
+                for player in cell:
+                    if position in player.positions:
+                        players_in_position.append((player.id, player.get_global_rating()))
+
+        players_in_position.sort(key=lambda t: t[1], reverse=True)
+
+        # top_players_id = []
+        # for tuple in players_in_position[0:N]:
+        #     top_players_id.append(tuple[0])
+
+        return players_in_position[0:N]
 
 class Player:
     def __init__(self, id, name, positions):
@@ -149,17 +158,20 @@ def read_ratings_csv(file, hash_players, hash_users):
     with file as csv_file:
         csv_reader = csv.reader(csv_file)
         next(csv_reader)
+        # Leitura dos dados
         for line in csv_reader:
             user_id = line[0]
             player_id = line[1]
             score = float(line[2])
             rating = Review(player_id, score)
 
+            # Salva user e rating
             target_user = hash_users.search(user_id)
             if target_user:
                 target_user.ratings.append(rating)
             else:
                 hash_users.insert(User(user_id, [rating]))
+            # Salva Player
             target_player = hash_players.search(player_id)
             target_player.ratings_count = target_player.ratings_count + 1
             target_player.total_score = target_player.total_score + score
@@ -187,7 +199,7 @@ def search_by_name(name, names_trie, hash_table):
 # arquivos
 """
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
-ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
+ratings_f = open('INF01124_FIFA21_clean/minirating.csv', 'r')
 
 """
 # Criacao das estruturas
@@ -211,7 +223,7 @@ print("QUESTÃO 2.1\n")
 print("--- %s seconds ---" % (time.time() - start_time))
 start_time = time.time()
 
-search_by_name('Mat', players_name_trie,players_hash)
+# search_by_name('Mat', players_name_trie,players_hash)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 
@@ -232,7 +244,7 @@ def get_user_ratings(user_id, hash_players):
               rated_player.ratings_count,
               rating.score)
 
-get_user_ratings('119743', players_hash)
+# get_user_ratings('119743', players_hash)
 
 
 """
@@ -240,22 +252,27 @@ get_user_ratings('119743', players_hash)
 """
 print("\n\nQUESTÃO 2.3\n")
 
-def best_ratings(N, posicao, hash_players):
-    players_in_position = {}
-    
-    for player in hash_players:
-        for position in player.positions:
-            if position == posicao:
-                players_in_position[player.id] = player.get_global_rating()
-    
-    sorted_players_in_position = sorted(players_in_position)
-    
-    for i in range(0,N):
-        player_used = hash_players.search(sorted_players_in_position(i))
-        print(player_used.id,
-              player_used.name,
-              player_used.positions,
-              player_used.total_score,
-              player_used.ratings_count)
-        
-best_ratings(5, 'ST', players_hash)
+# def best_ratings(N, posicao, hash_players):
+#     players_in_position = {}
+#
+#     for player in hash_players.table:
+#         for position in player.positions:
+#             if position == posicao:
+#                 players_in_position[player.id] = player.get_global_rating()
+#
+#     sorted_players_in_position = sorted(players_in_position)
+#
+#     for i in range(0,N):
+#         player_used = hash_players.search(sorted_players_in_position(i))
+#         print(player_used.id,
+#               player_used.name,
+#               player_used.positions,
+#               player_used.total_score,
+#               player_used.ratings_count)
+#
+# best_ratings(5, 'ST', players_hash)
+best = players_hash.get_best(10, 'ST')
+for p in best:
+    pl = players_hash.search(p[0])
+    print(pl.name, pl.get_global_rating())
+
