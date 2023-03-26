@@ -110,11 +110,11 @@ class HashTable:
 
         players_in_position.sort(key=lambda t: t[1], reverse=True)
 
-        # top_players_id = []
-        # for tuple in players_in_position[0:N]:
-        #     top_players_id.append(tuple[0])
+        top_players_id = []
+        for tuple in players_in_position[0:N]:
+            top_players_id.append(tuple[0])
 
-        return players_in_position[0:N]
+        return top_players_id
 
 class Player:
     def __init__(self, id, name, positions):
@@ -199,7 +199,8 @@ def search_by_name(name, names_trie, hash_table):
 # arquivos
 """
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
-ratings_f = open('INF01124_FIFA21_clean/minirating.csv', 'r')
+ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
+tags_f = open('INF01124_FIFA21_clean/tags.csv')
 
 """
 # Criacao das estruturas
@@ -271,8 +272,15 @@ print("\n\nQUESTÃO 2.3\n")
 #               player_used.ratings_count)
 #
 # best_ratings(5, 'ST', players_hash)
-best = players_hash.get_best(10, 'ST')
-for p in best:
-    pl = players_hash.search(p[0])
-    print(pl.name, pl.get_global_rating())
+
+
+best_players_id = players_hash.get_best(10, 'RB')
+for id in best_players_id:
+    pl = players_hash.search(id)
+    print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
+
+
+"""
+#questâo 2.4
+"""
 
