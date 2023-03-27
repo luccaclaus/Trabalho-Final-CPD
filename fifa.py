@@ -286,13 +286,27 @@ players_name_trie = Trie()
 users_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
 
 trie_tags = TrieTags()
+print("Criacao das estruturas:")
+print("--- %s seconds ---" % (time.time() - start_time))
+
 """
 # leitura dos arquivos
 """
+start_time = time.time()
 read_players_csv(players_f, players_hash, players_name_trie)
-read_ratings_csv(ratings_f, players_hash,users_hash)
-read_tags_csv(tags_f,trie_tags)
+print("Trie jogadores:")
+print("--- %s seconds ---" % (time.time() - start_time))
 
+
+start_time = time.time()
+read_ratings_csv(ratings_f, players_hash,users_hash)
+print("Hash ratings:")
+print("--- %s seconds ---" % (time.time() - start_time))
+
+
+start_time = time.time()
+read_tags_csv(tags_f,trie_tags)
+print("Trie tags:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 """
@@ -350,18 +364,18 @@ print("\n\nQUESTÃO 2.3\n")
 #
 # best_ratings(5, 'ST', players_hash)
 
-start_time = time.time()
+#start_time = time.time()
 
 # best_players_id = players_hash.get_best(10, 'RB')
 # for id in best_players_id:
 #     pl = players_hash.search(id)
 #     print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
 
-print("--- %s seconds ---" % (time.time() - start_time))
+#print("--- %s seconds ---" % (time.time() - start_time))
 
 """
 #questâo 2.4
 """
-print(trie_tags.get_tags_players(['Brazil','Dribbler']))
+#print(trie_tags.get_tags_players(['Brazil','Dribbler']))
 
 
