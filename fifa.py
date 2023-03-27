@@ -1,14 +1,9 @@
-import pandas as pd
-import numpy as np
 import csv
 import time
 
 CSV_PLAYERS_SIZE = 22787
 CSV_RATINGS_SIZE = 24188069
 CSV_MINIRATINGS_SIZE = 10007
-
-start_time = time.time()
-
 
 def hashPolinomial(id, size):
     numerals = str(id).split()
@@ -20,12 +15,14 @@ def hashPolinomial(id, size):
     key = polinomio % size
     return key
 
+def intersection(lst1, lst2):
+    lst3 = [value for value in lst1 if value in lst2]
+    return lst3
 
 class TrieNode:
     def __init__(self):
         self.children = [None] * 27  # a = 0 , b = 1 , ... z = 25, outros = 26
-        self.player_id = 0
-
+        self.player_id = 0   
 
 class Trie:
     def __init__(self):
@@ -79,6 +76,55 @@ class Trie:
         return self.findAllAncestors(start_node)
 
 
+class TrieTagsNode:
+    def __init__(self):
+        self.children = [None] * 27  # a = 0 , b = 1 , ... z = 25, outros = 26
+        self.players = []
+
+class TrieTags:
+    def __init__(self):
+        self.root = TrieTagsNode()
+        
+    def getCharIndex(self, char):
+        char = char.lower()
+        if ord(char) > ord('a') and ord(char) < ord('z'):
+            return ord(char) - 97
+        else: 
+            return 26
+            
+
+    def makeNewNode(self):
+        return TrieTagsNode()
+
+    def insert(self, string, id):
+        current_node = self.root
+        for char in string:
+            index = self.getCharIndex(char)
+            if not current_node.children[index]:
+                current_node.children[index] = self.makeNewNode()
+            current_node = current_node.children[index]
+        current_node.players.append(id)
+    
+    def searchNode(self, string):
+        current_node = self.root
+        for char in string:
+            index = self.getCharIndex(char)
+            if not current_node.children[index]:
+                return False
+            else:
+                current_node = current_node.children[index]
+
+        return current_node
+
+    def get_tags_players(self, tags):
+        intersec =  self.searchNode(tags[0]).players
+        for tag in tags:           
+            intersec = intersection(intersec, self.searchNode(tag).players)
+        return intersec
+
+            
+ 
+        
 class HashTable:
     def __init__(self, size, hash_funct):
         self.size = size
@@ -105,7 +151,7 @@ class HashTable:
         for cell in self.table:
             if cell:
                 for player in cell:
-                    if position in player.positions:
+                    if player.ratings_count >= 1000 and position in player.positions:
                         players_in_position.append((player.id, player.get_global_rating()))
 
         players_in_position.sort(key=lambda t: t[1], reverse=True)
@@ -116,12 +162,15 @@ class HashTable:
 
         return top_players_id
 
-    def get_tags_intersec(self, tags_list):
-        for cell in self.table:
-            if cell:
-                for player in cell:
-                    for tag in tags_list:
-                        if 
+    # def get_tags_intersec(self, tags_list):
+    #     result = []
+    #     for cell in self.table:
+    #        if cell:
+    #            for player in cell: 
+    #                 if tag1 in player.tags and tag2 in player.tags:
+    #                     result.append(player.id)
+                   
+
 
 class Player:
     def __init__(self, id, name, positions):
@@ -184,7 +233,7 @@ def read_ratings_csv(file, hash_players, hash_users):
             target_player.ratings_count = target_player.ratings_count + 1
             target_player.total_score = target_player.total_score + score
 
-def read_tags_csv(file, hash_players):
+def read_tags_csv(file, tags_trie):
     with file as csv_file:
         csv_reader = csv.reader(csv_file)
         next(csv_reader)
@@ -193,9 +242,8 @@ def read_tags_csv(file, hash_players):
             player_id = line[1]
             tag = line[2]
 
-            player = hash_players.search(player_id)
-            if player:
-                player.tags.append(tag)
+            tags_trie.insert(tag, id)
+
 
 
 
@@ -224,35 +272,38 @@ def search_by_name(name, names_trie, hash_table):
 # arquivos
 """
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
-ratings_f = open('INF01124_FIFA21_clean/minirating.csv', 'r')
+ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 tags_f = open('INF01124_FIFA21_clean/tags.csv')
 
 """
 # Criacao das estruturas
 """
+start_time = time.time()
 
 players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
 players_name_trie = Trie()
 
 users_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
+
+trie_tags = TrieTags()
 """
 # leitura dos arquivos
 """
 read_players_csv(players_f, players_hash, players_name_trie)
 read_ratings_csv(ratings_f, players_hash,users_hash)
-read_tags_csv(tags_f,players_hash)
+read_tags_csv(tags_f,trie_tags)
 
+print("--- %s seconds ---" % (time.time() - start_time))
 
 """
 # questão 2.1
 """
 print("QUESTÃO 2.1\n")
-print("--- %s seconds ---" % (time.time() - start_time))
-start_time = time.time()
+#start_time = time.time()
 
-search_by_name('Mat', players_name_trie,players_hash)
+# search_by_name('Mat', players_name_trie,players_hash)
 
-print("--- %s seconds ---" % (time.time() - start_time))
+# print("--- %s seconds ---" % (time.time() - start_time))
 
 
 """
@@ -260,18 +311,18 @@ print("--- %s seconds ---" % (time.time() - start_time))
 """
 print("\n\nQUESTÃO 2.2\n")
 
-def get_user_ratings(user_id, hash_players):
-    user = users_hash.search('60040')
+# def get_user_ratings(user_id, hash_players):
+#     user = users_hash.search('60040')
 
-    for rating in user.ratings:
-        rated_player = hash_players.search(rating.player_id)
-        print(rated_player.id,
-              rated_player.name,
-              rated_player.get_global_rating(),
-              rated_player.ratings_count,
-              rating.score)
+#     for rating in user.ratings:
+#         rated_player = hash_players.search(rating.player_id)
+#         print(rated_player.id,
+#               rated_player.name,
+#               rated_player.get_global_rating(),
+#               rated_player.ratings_count,
+#               rating.score)
 
-get_user_ratings('119743', players_hash)
+# get_user_ratings('119743', players_hash)
 
 
 """
@@ -299,15 +350,18 @@ print("\n\nQUESTÃO 2.3\n")
 #
 # best_ratings(5, 'ST', players_hash)
 
+start_time = time.time()
 
-best_players_id = players_hash.get_best(10, 'RB')
-for id in best_players_id:
-    pl = players_hash.search(id)
-    print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
+# best_players_id = players_hash.get_best(10, 'RB')
+# for id in best_players_id:
+#     pl = players_hash.search(id)
+#     print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
 
+print("--- %s seconds ---" % (time.time() - start_time))
 
 """
 #questâo 2.4
 """
+print(trie_tags.get_tags_players(['Brazil','Dribbler']))
 
 
