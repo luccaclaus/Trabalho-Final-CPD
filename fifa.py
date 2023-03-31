@@ -163,13 +163,7 @@ class HashTable:
 
         return top_players_id
 
-    # def get_tags_intersec(self, tags_list):
-    #     result = []
-    #     for cell in self.table:
-    #        if cell:
-    #            for player in cell:
-    #                 if tag1 in player.tags and tag2 in player.tags:
-    #                     result.append(player.id)
+
                    
 
 
@@ -273,7 +267,7 @@ def search_by_name(name, names_trie, hash_table):
 # arquivos
 """
 players_f = open('INF01124_FIFA21_clean/players.csv', 'r')
-ratings_f = open('INF01124_FIFA21_clean/minirating.csv', 'r')
+ratings_f = open('INF01124_FIFA21_clean/rating.csv', 'r')
 tags_f = open('INF01124_FIFA21_clean/tags.csv')
 
 """
@@ -348,7 +342,7 @@ print("\n\nQUESTÃO 2.3\n")
 
 start_time = time.time()
 
-best_players_id = players_hash.get_best(10, 'RB')
+best_players_id = players_hash.get_best(10, 'ST')
 for id in best_players_id:
     pl = players_hash.search(id)
     print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
