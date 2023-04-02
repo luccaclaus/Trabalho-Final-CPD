@@ -2,7 +2,8 @@ import csv
 import time
 
 CSV_PLAYERS_SIZE = 22787
-CSV_RATINGS_SIZE = 24188069
+#CSV_RATINGS_SIZE = 24188089
+CSV_RATINGS_SIZE = 29025707
 CSV_MINIRATINGS_SIZE = 10007
 
 def hashPolinomial(id, size):
@@ -14,6 +15,9 @@ def hashPolinomial(id, size):
         polinomio = polinomio + int(numerals[j]) * a ** j
     key = polinomio % size
     return key
+
+def hashIdentidade(id, size):
+    return int(id)%size
 
 def intersection(lst1, lst2):
     lst3 = [value for value in lst1 if value in lst2]
@@ -123,9 +127,9 @@ class TrieTags:
             intersec = intersection(intersec, self.searchNode(tag).players)
         return intersec
 
-            
- 
-        
+
+
+
 class HashTable:
     def __init__(self, size, hash_funct):
         self.size = size
@@ -164,7 +168,7 @@ class HashTable:
         return top_players_id
 
 
-                   
+
 
 
 class Player:
@@ -275,10 +279,11 @@ tags_f = open('INF01124_FIFA21_clean/tags.csv')
 """
 start_time = time.time()
 
-players_hash = HashTable(CSV_PLAYERS_SIZE, hashPolinomial)
+players_hash = HashTable(CSV_PLAYERS_SIZE, hashIdentidade)
+
 players_name_trie = Trie()
 
-users_hash = HashTable(CSV_RATINGS_SIZE, hashPolinomial)
+users_hash = HashTable(CSV_RATINGS_SIZE, hashIdentidade)
 
 trie_tags = TrieTags()
 print("Criacao das estruturas:")
@@ -289,25 +294,25 @@ print("--- %s seconds ---" % (time.time() - start_time))
 """
 start_time = time.time()
 read_players_csv(players_f, players_hash, players_name_trie)
-print("Trie jogadores:")
+print("\n\nTrie jogadores:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
 start_time = time.time()
 read_ratings_csv(ratings_f, players_hash,users_hash)
-print("Hash ratings:")
+print("\n\nHash ratings:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
 start_time = time.time()
 read_tags_csv(tags_f,trie_tags)
-print("Trie tags:")
+print("\n\nTrie tags:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 """
 # questão 2.1
 """
-print("QUESTÃO 2.1\n")
+print("\n\nQUESTÃO 2.1\n")
 start_time = time.time()
 
 search_by_name('Matt', players_name_trie,players_hash)
@@ -319,6 +324,9 @@ print("--- %s seconds ---" % (time.time() - start_time))
 #questao 2.2
 """
 print("\n\nQUESTÃO 2.2\n")
+
+start_time = time.time()
+
 
 def get_user_ratings(user_id, hash_players):
     user = users_hash.search('60040')
@@ -333,12 +341,12 @@ def get_user_ratings(user_id, hash_players):
 
 get_user_ratings('119743', players_hash)
 
+print("--- %s seconds ---" % (time.time() - start_time))
 
 """
 #questâo 2.3
 """
 print("\n\nQUESTÃO 2.3\n")
-
 
 start_time = time.time()
 
@@ -352,7 +360,10 @@ print("--- %s seconds ---" % (time.time() - start_time))
 """
 #questâo 2.4
 """
-print(("QUESTAO 2.4"))
+print(("\n\nQUESTAO 2.4"))
+
+start_time = time.time()
+
 players_with_tags = trie_tags.get_tags_players(['Brazil','Dribbler'])
 for pl_id in players_with_tags:
     pl_data = players_hash.search(pl_id)
@@ -364,6 +375,9 @@ for pl_id in players_with_tags:
               pl_data.get_global_rating(),
               pl_data.ratings_count
               )
+        
+print("--- %s seconds ---" % (time.time() - start_time))
+
 
 
 
