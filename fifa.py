@@ -2,14 +2,26 @@ import csv
 import time
 
 CSV_PLAYERS_SIZE = 22787
-#CSV_RATINGS_SIZE = 24188089
-CSV_RATINGS_SIZE = 29025707
+CSV_RATINGS_SIZE = 24188089
+#CSV_RATINGS_SIZE = 29025707
 CSV_MINIRATINGS_SIZE = 10007
+
+def hash_teste(key, size):
+
+    hashsum = 0
+
+    for character in range(len(key)):
+
+        hashsum = (hashsum * 31) + ord(key[character])
+
+    return hashsum % size
 
 def hashPolinomial(id, size):
     numerals = str(id).split()
+    #numerals = id
     length = len(numerals)
-    a = 31
+    #a = 31
+    a = 73
     polinomio = 0
     for j in range(0, length):
         polinomio = polinomio + int(numerals[j]) * a ** j
@@ -294,7 +306,7 @@ print("--- %s seconds ---" % (time.time() - start_time))
 """
 start_time = time.time()
 read_players_csv(players_f, players_hash, players_name_trie)
-print("\n\nTrie jogadores:")
+print("\n\nTrie + Hash jogadores:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
