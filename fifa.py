@@ -79,7 +79,7 @@ class Trie:
             current_node = node
             player_ids = []
             children_ids = []
-            if current_node.player_id:
+            if current_node and current_node.player_id:
                 player_ids.append(current_node.player_id)
             for child in current_node.children:
                 if child is not None:
@@ -89,7 +89,12 @@ class Trie:
 
     def findAllPlayers(self, string):
         start_node = self.searchNode(string)
-        return self.findAllAncestors(start_node)
+        if start_node:
+            return self.findAllAncestors(start_node)
+        else:
+            return []
+            #print("Nenhum jogador tem esse nome")
+
 
 
 class TrieTagsNode:
@@ -263,19 +268,36 @@ def read_tags_csv(file, tags_trie):
 """
 # Códigos de questões
 """
-
+# QUESTÂO 2.1 #
 def search_by_name(name, names_trie, hash_table):
 
     search_result = names_trie.findAllPlayers(name)
-    for id in search_result:
-        player = hash_table.search(id)
+    if search_result == []:
+        print("Nenhum jogador tem esse nome!")
+    else:
+        for id in search_result:
+            player = hash_table.search(id)
 
-        print(
-            player.id,
-            player.name,
-            player.positions,
-            player.get_global_rating(),
-            player.ratings_count)
+            print(
+                player.id,
+                player.name,
+                player.positions,
+                player.get_global_rating(),
+                player.ratings_count)
+
+# QUESTÂO 2.2 #
+def get_user_ratings(user_id, hash_players):
+    user = users_hash.search(user_id)
+    if user:
+        for rating in user.ratings:
+            rated_player = hash_players.search(rating.player_id)
+            print(rated_player.id,
+                rated_player.name,
+                rated_player.get_global_rating(),
+                rated_player.ratings_count,
+                rating.score)
+    else: 
+        print("\nInsira um usuário existente!")
 """
 # Testes
 """
@@ -324,73 +346,104 @@ print("--- %s seconds ---" % (time.time() - start_time))
 """
 # questão 2.1
 """
-print("\n\nQUESTÃO 2.1\n")
-start_time = time.time()
+# print("\n\nQUESTÃO 2.1\n")
+# start_time = time.time()
 
-search_by_name('Matt', players_name_trie,players_hash)
+# search_by_name('Matt', players_name_trie,players_hash)
 
-print("--- %s seconds ---" % (time.time() - start_time))
-
-
-"""
-#questao 2.2
-"""
-print("\n\nQUESTÃO 2.2\n")
-
-start_time = time.time()
+# print("--- %s seconds ---" % (time.time() - start_time))
 
 
-def get_user_ratings(user_id, hash_players):
-    user = users_hash.search('60040')
+# """
+# #questao 2.2
+# """
+# print("\n\nQUESTÃO 2.2\n")
 
-    for rating in user.ratings:
-        rated_player = hash_players.search(rating.player_id)
-        print(rated_player.id,
-              rated_player.name,
-              rated_player.get_global_rating(),
-              rated_player.ratings_count,
-              rating.score)
+# start_time = time.time()
 
-get_user_ratings('119743', players_hash)
 
-print("--- %s seconds ---" % (time.time() - start_time))
 
-"""
-#questâo 2.3
-"""
-print("\n\nQUESTÃO 2.3\n")
 
-start_time = time.time()
+# get_user_ratings('119743', players_hash)
 
-best_players_id = players_hash.get_best(10, 'ST')
-for id in best_players_id:
-    pl = players_hash.search(id)
-    print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
+# print("--- %s seconds ---" % (time.time() - start_time))
 
-print("--- %s seconds ---" % (time.time() - start_time))
+# """
+# #questâo 2.3
+# """
+# print("\n\nQUESTÃO 2.3\n")
 
-"""
-#questâo 2.4
-"""
-print(("\n\nQUESTAO 2.4"))
+# start_time = time.time()
 
-start_time = time.time()
+# best_players_id = players_hash.get_best(10, 'ST')
+# for id in best_players_id:
+#     pl = players_hash.search(id)
+#     print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
 
-players_with_tags = trie_tags.get_tags_players(['Brazil','Dribbler'])
-for pl_id in players_with_tags:
-    pl_data = players_hash.search(pl_id)
-    if pl_data:
-        print(
-              pl_data.id,
-              pl_data.name,
-              pl_data.positions,
-              pl_data.get_global_rating(),
-              pl_data.ratings_count
-              )
+# print("--- %s seconds ---" % (time.time() - start_time))
+
+# """
+# #questâo 2.4
+# """
+# print(("\n\nQUESTAO 2.4"))
+
+# start_time = time.time()
+
+# players_with_tags = trie_tags.get_tags_players(['Brazil','Dribbler'])
+# for pl_id in players_with_tags:
+#     pl_data = players_hash.search(pl_id)
+#     if pl_data:
+#         print(
+#               pl_data.id,
+#               pl_data.name,
+#               pl_data.positions,
+#               pl_data.get_global_rating(),
+#               pl_data.ratings_count
+#               )
         
-print("--- %s seconds ---" % (time.time() - start_time))
+# print("--- %s seconds ---" % (time.time() - start_time))
 
+positions = ["ST", "GK", "LW", "RW", "CF", "CAM", "CM", "CDM", "LM", "RM", "CB", "LB", "RB", "RWB", "LWB"]
+user_input = ""
 
+while user_input != "off":
+    user_input = input("\nDigite comando: ")
+    command = user_input.split(" ")
+    if user_input != "off":
+        funct_name = command[0]
+        arg = command[1]
 
+        match funct_name:
+            case "player":
+                search_by_name(arg, players_name_trie,players_hash)
+            case "user":
+                get_user_ratings(arg, players_hash)
+            #case "tags":
+                # players_with_tags = trie_tags.get_tags_players(['Brazil','Dribbler'])
+                # for pl_id in players_with_tags:
+                #     pl_data = players_hash.search(pl_id)
+                #     if pl_data:
+                #         print(
+                #             pl_data.id,
+                #             pl_data.name,
+                #             pl_data.positions,
+                #             pl_data.get_global_rating(),
+                #             pl_data.ratings_count
+                #             )
+
+            case _:
+                if funct_name[0:3] == "top":
+                    n_top = int(funct_name[3:])
+                    if n_top >= 1:
+                        if arg in positions:
+                            best_players_id = players_hash.get_best(n_top, arg)
+                            for id in best_players_id:
+                                pl = players_hash.search(id)
+                                print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
+                        else:
+                            print("\nInsira uma posiçâo válida!")
+                    else: 
+                        print("Insira um número positivo!")
+                else: print("\nComando inválido!")
 
 
