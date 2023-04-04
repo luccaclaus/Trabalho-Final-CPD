@@ -139,9 +139,18 @@ class TrieTags:
         return current_node
 
     def get_tags_players(self, tags):
-        intersec = self.searchNode(tags[0]).players
+        if not tags: return []
+        node = self.searchNode(tags[0])
+        if node:
+            intersec = node.players
+        else:
+            intersec = []
         for tag in tags:
-            intersec = intersection(intersec, self.searchNode(tag).players)
+            node = self.searchNode(tag)
+            if node:
+                intersec = intersection(intersec, node.players)
+            else:
+                intersec = []
         return intersec
 
 
@@ -411,39 +420,48 @@ while user_input != "off":
     command = user_input.split(" ")
     if user_input != "off":
         funct_name = command[0]
-        arg = command[1]
+        args = command[1:] #argumentos: todas as palavras passadas depois do nome da funcao
 
-        match funct_name:
-            case "player":
-                search_by_name(arg, players_name_trie,players_hash)
-            case "user":
-                get_user_ratings(arg, players_hash)
-            #case "tags":
-                # players_with_tags = trie_tags.get_tags_players(['Brazil','Dribbler'])
-                # for pl_id in players_with_tags:
-                #     pl_data = players_hash.search(pl_id)
-                #     if pl_data:
-                #         print(
-                #             pl_data.id,
-                #             pl_data.name,
-                #             pl_data.positions,
-                #             pl_data.get_global_rating(),
-                #             pl_data.ratings_count
-                #             )
+        #match funct_name:
+        # PLAYER: busca por nome
+        if funct_name == "player":
+            name_prefix = ' '.join(args)
+            search_by_name(name_prefix, players_name_trie,players_hash)
+        elif funct_name == "user":
+            user_id = args[0]  # argumento unico
+            get_user_ratings(user_id, players_hash)
+        # TAGS: busca por tags
+        elif funct_name == "tags":
+            tags_untreated = user_input.split("'")[1:]
+            tags = list(filter(lambda x: x!= '' and x!= ' ', tags_untreated))
 
-            case _:
-                if funct_name[0:3] == "top":
-                    n_top = int(funct_name[3:])
-                    if n_top >= 1:
-                        if arg in positions:
-                            best_players_id = players_hash.get_best(n_top, arg)
-                            for id in best_players_id:
-                                pl = players_hash.search(id)
-                                print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
-                        else:
-                            print("\nInsira uma posiçâo válida!")
-                    else: 
-                        print("Insira um número positivo!")
-                else: print("\nComando inválido!")
-
+            players_with_tags = trie_tags.get_tags_players(tags)
+            if not players_with_tags:
+                print("Nenhum jogador possui essas tags!\n")
+            for pl_id in players_with_tags:
+                pl_data = players_hash.search(pl_id)
+                if pl_data:
+                    print(
+                        pl_data.id,
+                        pl_data.name,
+                        pl_data.positions,
+                        pl_data.get_global_rating(),
+                        pl_data.ratings_count
+                        )
+        #TOPN: busca top N por posição
+        else:
+            if funct_name[0:3] == "top":
+                n_top = int(funct_name[3:])
+                pos = args[0] #argumento unico (posicao)
+                if n_top >= 1:
+                    if pos in positions:
+                        best_players_id = players_hash.get_best(n_top, pos)
+                        for id in best_players_id:
+                            pl = players_hash.search(id)
+                            print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
+                    else:
+                        print("\nInsira uma posiçâo válida!")
+                else:
+                    print("Insira um número positivo!")
+            else: print("\nComando inválido!")
 
