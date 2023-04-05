@@ -3,7 +3,6 @@ import time
 
 CSV_PLAYERS_SIZE = 22787
 CSV_RATINGS_SIZE = 24188089
-#CSV_RATINGS_SIZE = 29025707
 CSV_MINIRATINGS_SIZE = 10007
 
 def hash_teste(key, size):
@@ -352,65 +351,6 @@ read_tags_csv(tags_f,trie_tags)
 print("\n\nTrie tags:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
-"""
-# questão 2.1
-"""
-# print("\n\nQUESTÃO 2.1\n")
-# start_time = time.time()
-
-# search_by_name('Matt', players_name_trie,players_hash)
-
-# print("--- %s seconds ---" % (time.time() - start_time))
-
-
-# """
-# #questao 2.2
-# """
-# print("\n\nQUESTÃO 2.2\n")
-
-# start_time = time.time()
-
-
-
-
-# get_user_ratings('119743', players_hash)
-
-# print("--- %s seconds ---" % (time.time() - start_time))
-
-# """
-# #questâo 2.3
-# """
-# print("\n\nQUESTÃO 2.3\n")
-
-# start_time = time.time()
-
-# best_players_id = players_hash.get_best(10, 'ST')
-# for id in best_players_id:
-#     pl = players_hash.search(id)
-#     print(pl.id, pl.name, pl.positions ,pl.get_global_rating(), pl.ratings_count)
-
-# print("--- %s seconds ---" % (time.time() - start_time))
-
-# """
-# #questâo 2.4
-# """
-# print(("\n\nQUESTAO 2.4"))
-
-# start_time = time.time()
-
-# players_with_tags = trie_tags.get_tags_players(['Brazil','Dribbler'])
-# for pl_id in players_with_tags:
-#     pl_data = players_hash.search(pl_id)
-#     if pl_data:
-#         print(
-#               pl_data.id,
-#               pl_data.name,
-#               pl_data.positions,
-#               pl_data.get_global_rating(),
-#               pl_data.ratings_count
-#               )
-        
-# print("--- %s seconds ---" % (time.time() - start_time))
 
 positions = ["ST", "GK", "LW", "RW", "CF", "CAM", "CM", "CDM", "LM", "RM", "CB", "LB", "RB", "RWB", "LWB"]
 user_input = ""
