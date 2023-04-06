@@ -187,7 +187,7 @@ class HashTable:
         players_in_position.sort(key=lambda t: t[1], reverse=True)
 
         top_players_id = []
-        for tuple in players_in_position[0:N]:
+        for tuple in players_in_position[:N]:
             top_players_id.append(tuple[0])
 
         return top_players_id
@@ -229,7 +229,7 @@ def read_players_csv(file, hash_table, trie):
         for line in csv_reader:
             id = line[0]
             name = line[1]
-            positions = line[2].split(',')
+            positions = line[2].split(', ')
 
             hash_table.insert(Player(id, name, positions))
             trie.insert(name, id)
