@@ -114,7 +114,7 @@ players_name_trie = Trie()
 users_hash = HashTable(CSV_RATINGS_SIZE, hashIdentidade)
 
 trie_tags = TrieTags()
-print("Criacao das estruturas:")
+print("Tempo para criacao das estruturas:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 """
@@ -122,19 +122,19 @@ print("--- %s seconds ---" % (time.time() - start_time))
 """
 start_time = time.time()
 read_players_csv(players_f, players_hash, players_name_trie)
-print("\n\nTrie + Hash jogadores:")
+print("\n\nÁrvore Trie e Hash de jogadores:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
 start_time = time.time()
 read_ratings_csv(ratings_f, players_hash,users_hash)
-print("\n\nHash ratings:")
+print("\n\nHash de usuários:")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
 start_time = time.time()
 read_tags_csv(tags_f,trie_tags)
-print("\n\nTrie tags:")
+print("\n\nÁrvore Trie de tags (comentários):")
 print("--- %s seconds ---" % (time.time() - start_time))
 
 
