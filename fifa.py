@@ -55,7 +55,11 @@ def read_tags_csv(file, tags_trie):
 
             tags_trie.insert(tag, player_id)
 
-
+# Funções auxiliares
+def get_string_arguments(user_inp):
+    tags_untreated = user_inp.split("'")[1:]
+    tags = list(filter(lambda x: x != '' and x != ' ', tags_untreated))
+    return tags
 
 """
 # Códigos de questões
@@ -154,8 +158,9 @@ while user_input != "off":
             get_user_ratings(user_id, players_hash)
         # TAGS: busca por tags
         elif funct_name == "tags":
-            tags_untreated = user_input.split("'")[1:]
-            tags = list(filter(lambda x: x!= '' and x!= ' ', tags_untreated))
+            # tags_untreated = user_input.split("'")[1:]
+            # tags = list(filter(lambda x: x!= '' and x!= ' ', tags_untreated))
+            tags = get_string_arguments(user_input)
 
             players_with_tags = trie_tags.get_tags_players(tags)
             if not players_with_tags:
