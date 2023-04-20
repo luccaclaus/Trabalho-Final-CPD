@@ -22,10 +22,16 @@ With N being any positive number, the program gets the N top rated players in th
 <img src="documentacao/search_topn.png">
 <br><br>
 <b>3: SEARCH THE ALL PLAYERS WITH A LIST OF TAGS</b> <br>
-By searching a list of tags, the program displays all players that have been simultaneously given those tags by users <br><br>
+By searching a list of 'tags', the program displays all players that have been simultaneously given those tags by users <br><br>
 <img src="documentacao/search_tags.png">
 <br><br>
 <b>4: SEARCH A USER BY ID</b> <br>
 By searching a user by his id, the program displays data from all players he rated, togehter with the rating the user themselves gave each one <br><br>
 <img src="documentacao/search_user.png">
-<br>
+<br><br>
+<b>EXAMPLES FOR SEARCH:</b><br>
+player Lionel // player Marc // player Cristiano Rona<br>
+top10 GK // top5 ST // top15 CM <br>
+tags 'Manchester United' 'Dribbler' // tags 'Brazil' 'Technical Dribbler' 'Playmaker' <br>
+user 116092 // user 122330 // user 100922 
+
