@@ -14,17 +14,18 @@ To reach the goal of having a quickly searchable database, this program contains
 Here are the 4 types of searches you can perform on this project: <br>
 <b>1: SEARCH PLAYERS_NAME BY PREFIX</b> <br>
 By searching a player's name prefix, the program quickly finds that player in the database and displays all his information: id, average rating, positions, etc <br>
+<br>
 <img src="documentacao/search_prefix.png">
-<br>
+<br><br>
 <b>2: SEARCH THE TOP N PLAYERS IN A POSITION</b> <br>
-With N being any positive number, the program gets the N top rated players in the position passed as an argument. <br>
+With N being any positive number, the program gets the N top rated players in the position passed as an argument. <br><br>
 <img src="documentacao/search_topn.png">
-<br>
+<br><br>
 <b>3: SEARCH THE ALL PLAYERS WITH A LIST OF TAGS</b> <br>
-By searching a list of tags, the program displays all players that have been simultaneously given those tags by users <br>
+By searching a list of tags, the program displays all players that have been simultaneously given those tags by users <br><br>
 <img src="documentacao/search_tags.png">
-<br>
+<br><br>
 <b>4: SEARCH A USER BY ID</b> <br>
-By searching a user by his id, the program displays data from all players he rated, togehter with the rating the user themselves gave each one <br>
+By searching a user by his id, the program displays data from all players he rated, togehter with the rating the user themselves gave each one <br><br>
 <img src="documentacao/search_user.png">
 <br>
